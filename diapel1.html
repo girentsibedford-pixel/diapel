@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#25231f">
+  <title>Diapel Shoes — Find your everyday pair</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #25231f;
+      --muted: #77736d;
+      --ash: #efeee9;
+      --paper: #faf9f6;
+      --brown: #75583f;
+      --brown-dark: #55402f;
+      --line: #dedbd4;
+      --white: #fff;
+      --sale: #a14c37;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", sans-serif; }
+    body.locked { overflow: hidden; }
+    button, input, select, textarea { font: inherit; }
+    button { color: inherit; cursor: pointer; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    .hidden { display: none !important; }
+    .announcement { padding: 9px 5vw; background: var(--ink); color: white; text-align: center; font-size: .75rem; letter-spacing: .08em; }
+    .site-header { position: sticky; z-index: 10; top: 0; background: rgba(250,249,246,.97); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+    .header-main { display: grid; grid-template-columns: auto minmax(180px, 1fr) auto; align-items: center; gap: 35px; max-width: 1440px; margin: auto; padding: 19px 5vw 14px; }
+    .logo { font-size: 1.12rem; font-weight: 700; letter-spacing: .16em; text-decoration: none; white-space: nowrap; }
+    .logo span { color: var(--brown); }
+    .search { position: relative; max-width: 580px; width: 100%; justify-self: center; }
+    .search input { width: 100%; padding: 12px 44px 12px 15px; border: 1px solid var(--line); border-radius: 2px; background: white; outline-color: var(--brown); }
+    .search button { position: absolute; top: 0; right: 0; height: 100%; width: 42px; border: 0; background: none; font-size: 1.2rem; }
+    .header-actions { display: flex; align-items: center; gap: 17px; }
+    .icon-button { position: relative; padding: 6px; border: 0; background: none; font-weight: 600; white-space: nowrap; }
+    .cart-count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin-left: 3px; border-radius: 50%; background: var(--brown); color: white; font-size: .69rem; }
+    .main-nav { display: flex; justify-content: center; gap: clamp(18px, 3.6vw, 48px); max-width: 1440px; margin: auto; padding: 0 5vw 14px; }
+    .main-nav button { padding: 0; border: 0; background: none; font-size: .85rem; font-weight: 600; }
+    .main-nav button:hover, .icon-button:hover { color: var(--brown); }
+    .page { display: none; }
+    .page.active { display: block; }
+    .hero { display: grid; grid-template-columns: 1fr .9fr; min-height: 530px; background: var(--ash); }
+    .hero-copy { align-self: center; padding: 8vw; }
+    .eyebrow { color: var(--brown); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    h1, h2, h3, p { overflow-wrap: anywhere; }
+    .hero h1 { max-width: 620px; margin: 19px 0; font: 700 clamp(3.2rem, 7vw, 6.5rem)/.97 "Playfair Display", serif; letter-spacing: -.045em; }
+    .hero-copy p { max-width: 480px; color: #605c55; line-height: 1.8; }
+    .hero-image { min-height: 400px; background: url("https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=1500&q=85") center/cover; }
+    .button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 13px 21px; border: 1px solid var(--ink); background: var(--ink); color: white; text-decoration: none; font-weight: 600; transition: .18s; }
+    .button:hover { border-color: var(--brown); background: var(--brown); }
+    .button.outline { background: transparent; color: var(--ink); }
+    .button.outline:hover { color: white; }
+    .section { padding: 76px 6vw; }
+    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 25px; margin-bottom: 28px; }
+    .section-heading h2, .story-copy h2 { margin: 8px 0 0; font: 700 clamp(2rem, 4vw, 3.5rem)/1.1 "Playfair Display", serif; }
+    .section-heading p { max-width: 410px; margin: 0; color: var(--muted); line-height: 1.7; }
+    .brand-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+    .brand-card { position: relative; display: flex; min-height: 220px; align-items: end; padding: 18px; overflow: hidden; background-position: center; background-size: cover; color: white; text-decoration: none; }
+    .brand-card::before { position: absolute; inset: 0; content: ""; background: linear-gradient(0deg, rgba(20,18,16,.78), transparent 78%); transition: .2s; }
+    .brand-card:hover::before { background-color: rgba(20,18,16,.16); }
+    .brand-card span { z-index: 1; font: 700 1.25rem "Playfair Display", serif; }
+    .promo { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 30px; padding: 48px 6vw; background: #ded8cf; }
+    .promo h2 { margin: 9px 0; font: 700 clamp(2rem, 4vw, 3.2rem)/1.05 "Playfair Display", serif; }
+    .promo p { color: #62584d; line-height: 1.65; }
+    .promo-code { justify-self: end; padding: 21px 30px; border: 1px dashed var(--brown-dark); text-align: center; }
+    .promo-code strong { display: block; margin-top: 5px; font-size: 1.5rem; letter-spacing: .14em; }
+    .assurance-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; padding: 30px 6vw; background: var(--ink); color: white; text-align: center; }
+    .assurance-row strong { display: block; margin-bottom: 6px; }
+    .assurance-row span { color: #c8c3bb; font-size: .82rem; }
+    .page-heading { padding: 55px 6vw 28px; background: var(--ash); }
+    .page-heading h1 { margin: 10px 0; font: 700 clamp(2.7rem, 5vw, 4.6rem)/1.04 "Playfair Display", serif; }
+    .page-heading p { max-width: 720px; color: #625e57; line-height: 1.7; }
+    .shop-layout { display: grid; grid-template-columns: 215px minmax(0, 1fr); gap: 36px; padding: 40px 6vw 80px; }
+    .filters { padding-right: 23px; border-right: 1px solid var(--line); }
+    .filters h3 { margin: 0 0 20px; font-size: 1rem; }
+    .filter-group { margin-bottom: 24px; }
+    .filter-group h4 { margin: 0 0 12px; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+    .category-list { display: grid; gap: 10px; }
+    .category-button { padding: 0; border: 0; background: none; color: var(--muted); text-align: left; }
+    .category-button.active, .category-button:hover { color: var(--brown-dark); font-weight: 700; }
+    .price-inputs { display: flex; gap: 8px; }
+    .price-inputs input, .filters select { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--line); background: white; }
+    .filter-apply { width: 100%; margin-top: 8px; padding: 9px; border: 1px solid var(--ink); background: transparent; font-weight: 600; }
+    .results-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 20px; color: var(--muted); font-size: .87rem; }
+    .results-toolbar select { padding: 10px; border: 1px solid var(--line); background: white; color: var(--ink); }
+    .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 17px; }
+    .product-card { min-width: 0; }
+    .product-image { position: relative; display: block; width: 100%; aspect-ratio: 4/4.4; overflow: hidden; background: #e8e6e0; }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .product-card:hover .product-image img { transform: scale(1.035); }
+    .product-tag { position: absolute; top: 12px; left: 12px; padding: 6px 8px; background: white; font-size: .65rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+    .product-tag.sale { color: var(--sale); }
+    .product-meta { display: flex; justify-content: space-between; gap: 10px; margin-top: 12px; font-size: .88rem; font-weight: 600; }
+    .product-meta button { padding: 0; border: 0; background: none; text-align: left; font-weight: 600; }
+    .product-meta button:hover { color: var(--brown); }
+    .listing-price { display: flex; align-items: baseline; gap: 7px; white-space: nowrap; }
+    .listing-price del { color: var(--muted); font-size: .78rem; font-weight: 400; }
+    .product-submeta { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; color: var(--muted); font-size: .77rem; }
+    .stars { color: #997044; letter-spacing: .06em; white-space: nowrap; }
+    .empty-state { grid-column: 1 / -1; padding: 50px 20px; color: var(--muted); text-align: center; }
+    .story-layout { display: grid; grid-template-columns: .9fr 1.1fr; gap: 8vw; align-items: center; padding: 70px 8vw; }
+    .story-image { min-height: 440px; background: url("https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=1200&q=85") center/cover; }
+    .story-copy p { color: #625e57; line-height: 1.85; }
+    .content-page { max-width: 920px; margin: auto; padding: 60px 6vw 85px; }
+    .content-page h1 { margin: 8px 0 14px; font: 700 clamp(2.7rem, 5vw, 4rem)/1.05 "Playfair Display", serif; }
+    .content-page > p { color: var(--muted); line-height: 1.8; }
+    .order-search { display: flex; gap: 9px; margin: 22px 0; }
+    .order-search input { flex: 1; min-width: 0; padding: 12px; border: 1px solid var(--line); background: white; }
+    .order-card { margin: 18px 0; padding: 20px; border: 1px solid var(--line); background: white; }
+    .order-header, .order-totals { display: flex; justify-content: space-between; gap: 15px; }
+    .order-header { padding-bottom: 13px; border-bottom: 1px solid var(--line); }
+    .order-header p, .order-totals p { margin: 4px 0; color: var(--muted); font-size: .83rem; }
+    .order-demo-status { color: var(--brown-dark); font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .order-product { display: grid; grid-template-columns: 68px 1fr auto; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+    .order-product img { width: 68px; height: 75px; object-fit: cover; }
+    .order-product h3 { margin: 0 0 4px; font-size: .9rem; }
+    .order-product p { margin: 0; color: var(--muted); font-size: .78rem; }
+    .order-product button { margin-top: 5px; padding: 0; border: 0; background: none; color: var(--brown-dark); font-size: .78rem; text-decoration: underline; }
+    .order-totals { padding-top: 13px; }
+    .order-empty { margin-top: 20px; padding: 22px; background: var(--ash); color: var(--muted); line-height: 1.7; }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-item summary { padding: 19px 0; cursor: pointer; font-weight: 700; }
+    .faq-item p, .policy-copy p, .policy-copy li { color: #625e57; line-height: 1.8; }
+    .policy-copy h2 { margin-top: 30px; font: 700 1.55rem "Playfair Display", serif; }
+    .site-footer { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 30px; padding: 45px 6vw; background: var(--ink); color: white; }
+    .site-footer p, .site-footer a { color: #cbc6bd; font-size: .83rem; line-height: 1.8; }
+    .site-footer a { display: block; text-decoration: none; }
+    .site-footer a:hover { color: white; text-decoration: underline; }
+    .footer-heading { margin-bottom: 10px; font-size: .76rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .overlay { position: fixed; z-index: 30; inset: 0; display: grid; grid-template-columns: 1fr min(480px, 100%); background: rgba(24,22,20,.48); }
+    .overlay-backdrop { border: 0; background: transparent; }
+    .drawer { height: 100%; overflow-y: auto; padding: 25px; background: var(--paper); box-shadow: -10px 0 35px rgba(0,0,0,.14); }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .drawer-header h2 { margin: 0; font: 700 1.8rem "Playfair Display", serif; }
+    .close-button { width: 37px; height: 37px; border: 1px solid var(--line); border-radius: 50%; background: white; font-size: 1.2rem; }
+    .cart-line { display: grid; grid-template-columns: 76px 1fr auto; gap: 13px; padding: 17px 0; border-bottom: 1px solid var(--line); }
+    .cart-line img { width: 76px; height: 85px; object-fit: cover; }
+    .cart-line h3 { margin: 2px 0 5px; font-size: .9rem; }
+    .cart-line p { margin: 0 0 8px; color: var(--muted); font-size: .78rem; }
+    .quantity-control { display: inline-flex; align-items: center; border: 1px solid var(--line); }
+    .quantity-control button { width: 28px; height: 28px; border: 0; background: white; }
+    .quantity-control span { min-width: 26px; text-align: center; font-size: .8rem; }
+    .remove-button { margin-top: 8px; padding: 0; border: 0; background: none; color: var(--muted); font-size: .75rem; text-decoration: underline; }
+    .cart-summary { padding-top: 20px; }
+    .summary-row { display: flex; justify-content: space-between; gap: 15px; margin: 10px 0; font-size: .9rem; }
+    .cart-summary .button { width: 100%; margin-top: 12px; }
+    .modal-wrap { position: fixed; z-index: 40; inset: 0; display: grid; place-items: center; overflow: auto; padding: 24px; background: rgba(24,22,20,.58); }
+    .modal { position: relative; width: min(950px, 100%); max-height: calc(100vh - 48px); overflow-y: auto; padding: 28px; background: var(--paper); }
+    .modal.narrow { width: min(480px, 100%); }
+    .modal-close { position: absolute; z-index: 2; top: 13px; right: 13px; }
+    .product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding-top: 18px; }
+    .gallery-main { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: var(--ash); }
+    .gallery-thumbs { display: flex; gap: 9px; margin-top: 10px; }
+    .gallery-thumbs button { width: 65px; height: 65px; padding: 0; overflow: hidden; border: 1px solid transparent; background: var(--ash); }
+    .gallery-thumbs button.active { border-color: var(--brown); }
+    .gallery-thumbs img { width: 100%; height: 100%; object-fit: cover; }
+    .detail-copy h2 { margin: 8px 0; font: 700 2rem/1.1 "Playfair Display", serif; }
+    .detail-price { margin: 16px 0; font-size: 1.2rem; font-weight: 700; }
+    .detail-price del { margin-left: 9px; color: var(--muted); font-size: .95rem; font-weight: 400; }
+    .detail-copy p { color: #625e57; line-height: 1.7; }
+    .stock { color: #39714b !important; font-weight: 600; }
+    .rating-line { margin: 12px 0; }
+    .review { padding: 12px 0; border-top: 1px solid var(--line); font-size: .87rem; }
+    .review strong { display: inline-block; margin-right: 8px; }
+    .review p { margin: 5px 0 0; font-size: .83rem; }
+    .detail-actions { display: flex; gap: 10px; margin: 17px 0; }
+    .detail-actions input { width: 72px; padding: 12px; border: 1px solid var(--line); }
+    .detail-actions .button { flex: 1; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 20px; }
+    .form-field { display: block; font-size: .83rem; font-weight: 600; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field input, .form-field select, .form-field textarea { display: block; width: 100%; margin-top: 6px; padding: 12px; border: 1px solid var(--line); background: white; outline-color: var(--brown); }
+    .form-field textarea { min-height: 80px; resize: vertical; }
+    .form-actions { margin-top: 20px; }
+    .form-actions .button { width: 100%; }
+    .notice { margin: 15px 0; padding: 13px; border-left: 3px solid var(--brown); background: var(--ash); color: #615c54; font-size: .82rem; line-height: 1.65; }
+    .toast { position: fixed; z-index: 60; right: 20px; bottom: 20px; max-width: calc(100% - 40px); padding: 14px 19px; background: var(--ink); color: white; box-shadow: 0 6px 22px rgba(0,0,0,.2); }
+    @media (max-width: 900px) {
+      .header-main { grid-template-columns: auto 1fr auto; gap: 15px; }
+      .brand-grid { grid-template-columns: repeat(3, 1fr); }
+      .shop-layout { grid-template-columns: 170px minmax(0, 1fr); gap: 22px; }
+      .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .site-footer { grid-template-columns: repeat(2, 1fr); }
+      .story-layout { gap: 5vw; padding-right: 6vw; padding-left: 6vw; }
+    }
+    @media (max-width: 620px) {
+      .announcement { font-size: .68rem; }
+      .header-main { grid-template-columns: 1fr auto; padding: 14px 5vw 11px; }
+      .search { grid-column: 1 / -1; grid-row: 2; max-width: none; }
+      .header-actions { gap: 10px; }
+      .icon-button { font-size: .82rem; }
+      .main-nav { justify-content: flex-start; gap: 23px; overflow-x: auto; padding: 0 5vw 12px; }
+      .main-nav button { white-space: nowrap; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { padding: 60px 7vw; }
+      .hero-image { min-height: 300px; }
+      .section { padding: 55px 6vw; }
+      .section-heading { align-items: flex-start; flex-direction: column; }
+      .brand-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .brand-card { min-height: 175px; }
+      .promo { grid-template-columns: 1fr; padding: 35px 6vw; }
+      .promo-code { justify-self: start; }
+      .assurance-row { grid-template-columns: 1fr; gap: 17px; }
+      .shop-layout { grid-template-columns: 1fr; padding: 27px 5vw 60px; }
+      .filters { padding: 0 0 19px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .category-list { display: flex; flex-wrap: wrap; gap: 10px 16px; }
+      .results-toolbar { align-items: flex-start; flex-direction: column; }
+      .results-toolbar select { width: 100%; }
+      .product-grid { gap: 23px 11px; }
+      .product-meta { font-size: .8rem; }
+      .product-submeta { flex-direction: column; gap: 3px; font-size: .72rem; }
+      .story-layout { grid-template-columns: 1fr; padding: 48px 6vw; }
+      .story-image { min-height: 300px; }
+      .site-footer { grid-template-columns: 1fr 1fr; gap: 20px; padding: 34px 6vw; }
+      .order-search { flex-direction: column; }
+      .order-header { flex-direction: column; }
+      .overlay { grid-template-columns: 0 1fr; }
+      .drawer { padding: 20px; }
+      .product-detail { grid-template-columns: 1fr; }
+      .modal { padding: 23px 18px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-field.full { grid-column: auto; }
+      .detail-copy h2 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">COMFORT FOR EVERY STEP &nbsp;·&nbsp; FREE SHIPPING ON ORDERS OVER $100</div>
+  <header class="site-header">
+    <div class="header-main">
+      <a class="logo" href="#" data-page="home" aria-label="Diapel Shoes home">DIAPEL <span>SHOES</span></a>
+      <form class="search" id="searchForm" role="search">
+        <input id="searchInput" type="search" placeholder="Search shoes, socks, and brands..." aria-label="Search products">
+        <button type="submit" aria-label="Search">⌕</button>
+      </form>
+      <div class="header-actions">
+        <button class="icon-button" id="accountButton" type="button">Sign in</button>
+        <button class="icon-button" id="cartButton" type="button" aria-label="Open shopping cart">Bag <span class="cart-count" id="cartCount">0</span></button>
+      </div>
+    </div>
+    <nav class="main-nav" aria-label="Main navigation">
+      <button data-page="home">Home</button>
+      <button data-page="shop">Shop all</button>
+      <button data-page="shop">Shoes</button>
+      <button data-page="shop" data-brand="diapel">Socks</button>
+      <button data-page="sale">Sale</button>
+      <button data-page="orders">My orders</button>
+      <button data-page="about">About</button>
+      <button data-page="faq">FAQ</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page active" id="homePage">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">A better everyday starts here</span>
+          <h1>Find your everyday pair.</h1>
+          <p>From laid-back flats to all-day sneakers and soft socks, discover comfortable essentials from the brands you love.</p>
+          <button class="button" data-page="shop">Shop the collection <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="hero-image" role="img" aria-label="A pair of classic everyday sneakers"></div>
+      </div>
+      <section class="section">
+        <div class="section-heading">
+          <div><span class="eyebrow">Your favorites, all together</span><h2>Shop by brand.</h2></div>
+          <p>Explore each collection to find shoes, socks, and easy-to-wear styles selected for every day.</p>
+        </div>
+        <div class="brand-grid" id="homeBrands"></div>
+      </section>
+      <section class="promo">
+        <div><span class="eyebrow">A little something extra</span><h2>Good things come in pairs.</h2><p>Save 15% on your first order over $75. Add the code at checkout to enjoy a little Diapel welcome.</p></div>
+        <div class="promo-code"><span>YOUR FIRST ORDER</span><strong>STEP15</strong></div>
+      </section>
+      <div class="assurance-row">
+        <div><strong>Carefully chosen comfort</strong><span>Everyday favorites for every step.</span></div>
+        <div><strong>Easy, clear delivery</strong><span>Delivery details shown before order confirmation.</span></div>
+        <div><strong>Here to help</strong><span>Friendly support for fit, orders, and returns.</span></div>
+      </div>
+    </section>
+
+    <section class="page" id="shopPage">
+      <div class="page-heading"><span class="eyebrow">The Diapel edit</span><h1>Shop all styles.</h1><p>Browse shoes and socks, filter by category and price, and sort by popularity or newest arrivals.</p></div>
+      <div class="shop-layout">
+        <aside class="filters" aria-label="Product filters">
+          <h3>Find your fit</h3>
+          <div class="filter-group"><h4>Category</h4><div class="category-list" id="categoryList"></div></div>
+          <div class="filter-group"><h4>Brand</h4><select id="brandFilter" aria-label="Filter by brand"></select></div>
+          <div class="filter-group">
+            <h4>Price range</h4>
+            <div class="price-inputs"><input id="minPrice" type="number" min="0" placeholder="Min $" aria-label="Minimum price"><input id="maxPrice" type="number" min="0" placeholder="Max $" aria-label="Maximum price"></div>
+            <button class="filter-apply" id="applyPrice" type="button">Apply price</button>
+          </div>
+          <button class="icon-button" id="clearFilters" type="button">Clear all filters</button>
+        </aside>
+        <div>
+          <div class="results-toolbar"><span id="resultCount"></span><label>Sort by&nbsp;
+            <select id="sortSelect" aria-label="Sort products">
+              <option value="popular">Most popular</option>
+              <option value="newest">Newest arrivals</option>
+              <option value="low-high">Price: low to high</option>
+              <option value="high-low">Price: high to low</option>
+            </select>
+          </label></div>
+          <div class="product-grid" id="productGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="salePage">
+      <div class="page-heading"><span class="eyebrow">A little less, a lot of comfort</span><h1>The Diapel sale.</h1><p>Find special prices on selected shoes and socks. Sale prices and original prices are displayed in US dollars.</p></div>
+      <div class="shop-layout">
+        <aside class="filters"><h3>Sale picks</h3><p style="color:var(--muted);line-height:1.7">Explore discounted everyday favorites while supplies last.</p><button class="button outline" data-page="shop">View all products</button></aside>
+        <div><div class="results-toolbar"><span id="saleCount"></span><label>Sort by&nbsp;<select id="saleSort"><option value="popular">Most popular</option><option value="newest">Newest arrivals</option><option value="low-high">Price: low to high</option><option value="high-low">Price: high to low</option></select></label></div><div class="product-grid" id="saleGrid"></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="ordersPage">
+      <div class="content-page">
+        <span class="eyebrow">Your Diapel purchases</span>
+        <h1>Find your orders.</h1>
+        <p>Enter the email address used at demo checkout to find your saved order previews and the products in them.</p>
+        <form class="order-search" id="orderSearchForm">
+          <input id="orderEmail" type="email" autocomplete="email" placeholder="Email used at checkout" aria-label="Email used at checkout" required>
+          <button class="button" type="submit">Find my orders</button>
+        </form>
+        <div class="notice">Demo order history is saved only in this browser. These previews are not real paid or shipped orders, and are not available on other devices.</div>
+        <div id="ordersList" aria-live="polite"><div class="order-empty">Enter your checkout email above to look up purchases on this browser.</div></div>
+      </div>
+    </section>
+
+    <section class="page" id="aboutPage">
+      <div class="page-heading"><span class="eyebrow">Our story</span><h1>Comfort, with purpose.</h1><p>Diapel Shoes brings together thoughtful everyday footwear and the small essentials that make every step feel better.</p></div>
+      <div class="story-layout"><div class="story-image" role="img" aria-label="Everyday sneakers"></div><div class="story-copy"><span class="eyebrow">Walk your way</span><h2>Good shoes. Better journeys.</h2><p>We believe what you wear on your feet should help you feel ready for the day. That is why Diapel gathers trusted brands, easy-wear favorites, and soft socks in one welcoming place.</p><p>From sneakers and flats to boots and cozy socks, our purpose is simple: make it easier to find comfort and confidence in every step.</p><button class="button" data-page="shop">Find your pair →</button></div></div>
+    </section>
+
+    <section class="page" id="faqPage">
+      <div class="content-page">
+        <span class="eyebrow">A few helpful answers</span><h1>Frequently asked questions.</h1>
+        <details class="faq-item"><summary>How do I choose a shoe size?</summary><p>Check the size guide on each product and compare it with a pair that fits you well. If you are between sizes, review the product notes or contact our support team before ordering.</p></details>
+        <details class="faq-item"><summary>How much does shipping cost?</summary><p>This demo shows sample USD rates at checkout: United States standard is $8 (free for item subtotals of $100 or more) or express for $15; Canada and the United Kingdom standard is $18; Ghana and Nigeria standard is $12. Estimated delivery is 3–5 business days for US standard, 1–2 for US express, and 5–10 for the other listed destinations. No real delivery is arranged.</p></details>
+        <details class="faq-item"><summary>Can I return an item?</summary><p>Eligible unworn shoes and unopened socks may be returned within 30 days of delivery. See our <button class="icon-button" data-page="returns">return policy</button> for details and exceptions.</p></details>
+        <details class="faq-item"><summary>How can I track my delivery?</summary><p>In a live store, a dispatch confirmation would include your tracking details. The order form in this demo does not create or ship a real order.</p></details>
+        <details class="faq-item"><summary>Are payments processed on this website?</summary><p>No. This is a front-end demo and it does not accept or store card information or process payments. A real store must connect a trusted payment provider on a secure server.</p></details>
+        <details class="faq-item"><summary>How do discounts work?</summary><p>Enter an available code in the discount field at checkout. STEP15 is a sample welcome offer shown on the home page; discounts in this demo are calculated locally and are not redeemable purchases.</p></details>
+      </div>
+    </section>
+
+    <section class="page" id="returnsPage">
+      <div class="content-page policy-copy">
+        <span class="eyebrow">Shopping with confidence</span><h1>Returns &amp; refunds.</h1>
+        <p>Our sample policy is written to show customers how a real store could explain returns. Confirm the final terms with your business before publishing.</p>
+        <h2>Return window</h2><p>Request a return within 30 days after delivery. Shoes should be unworn, in their original packaging, and accompanied by proof of purchase. For hygiene, socks must be unopened and unused.</p>
+        <h2>How to request a return</h2><p>Contact customer care with your order number and the item you wish to return. We will provide return instructions after confirming eligibility. Do not send items to an address before receiving instructions.</p>
+        <h2>Refunds</h2><p>Once an eligible return is received and inspected, a refund is issued to the original payment method by the payment provider. Processing time depends on your bank or card issuer. Original shipping charges may not be refundable where permitted by law.</p>
+        <h2>Damaged or incorrect items</h2><p>Contact customer care as soon as possible with your order number and clear photos so the issue can be reviewed and resolved.</p>
+        <h2>Exceptions and consumer rights</h2><p>Personalized or final-sale products may have different return conditions where permitted. This policy does not limit any rights you have under applicable consumer-protection laws.</p>
+      </div>
+    </section>
+
+    <section class="page" id="shippingPage">
+      <div class="content-page policy-copy">
+        <span class="eyebrow">From our door to yours</span><h1>Shipping &amp; delivery.</h1>
+        <p>This sample policy explains the information a customer should see before completing a real purchase. Delivery availability, costs, and timeframes must be configured for your actual service areas.</p>
+        <h2>Delivery options</h2><p>This demo displays sample USD rates: United States standard delivery costs $8, or is free when the item subtotal is at least $100; US express delivery costs $15. Standard delivery costs $18 to Canada and the United Kingdom, and $12 to Ghana and Nigeria. Estimated delivery is 3–5 business days for US standard, 1–2 for US express, and 5–10 for other listed destinations. These are examples only: no real shipment or tracking is provided.</p>
+        <h2>Order processing</h2><p>Orders are prepared after payment authorization. Weekends, public holidays, inventory checks, and peak periods may affect processing time. Customers should receive an order confirmation and a separate dispatch notice.</p>
+        <h2>Delivery address</h2><p>Please check that the recipient name, street, city, postal code, and contact details are accurate. Changes may not be possible after an order has been dispatched.</p>
+        <h2>Tracking and delivery problems</h2><p>Where available, tracking details should be sent with the dispatch notice. If a package is delayed, marked delivered but not received, or arrives damaged, contact customer care with your order number.</p>
+        <h2>Taxes and import charges</h2><p>Any applicable taxes or customs charges should be disclosed at checkout or by the relevant authority. Customers are responsible only for charges clearly stated before purchase and permitted by local law.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div><a class="logo" href="#" data-page="home">DIAPEL <span>SHOES</span></a><p>Comfort for every step. Thoughtful shoes and socks for everyday journeys.</p></div>
+    <div><div class="footer-heading">Explore</div><a href="#" data-page="shop">Shop all</a><a href="#" data-page="sale">Sale</a><a href="#" data-page="orders">My orders</a><a href="#" data-page="about">About Diapel</a></div>
+    <div><div class="footer-heading">Customer care</div><a href="#" data-page="faq">FAQ</a><a href="#" data-page="shipping">Shipping &amp; delivery</a><a href="#" data-page="returns">Returns &amp; refunds</a></div>
+    <div><div class="footer-heading">Get in touch</div><p>Questions about sizing, an order, or a return?<br>Write to hello@diapelshoes.example</p></div>
+  </footer>
+
+  <div class="overlay hidden" id="cartOverlay" aria-modal="true" role="dialog" aria-label="Shopping bag">
+    <button class="overlay-backdrop" data-close-cart aria-label="Close shopping bag"></button>
+    <aside class="drawer"><div class="drawer-header"><h2>Your bag</h2><button class="close-button" data-close-cart aria-label="Close">×</button></div><div id="cartItems"></div><div class="cart-summary" id="cartSummary"></div></aside>
+  </div>
+  <div id="modalRoot"></div>
+  <div id="toastRoot" aria-live="polite"></div>
+
+  <script>
+    const image = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=82`;
+    const shoeGallery = [
+      "photo-1542291026-7eec264c27ff",
+      "photo-1552346154-21d32810aba3",
+      "photo-1495555961986-6d4c1ecb7be3",
+      "photo-1525966222134-fcfa99b8ae77",
+      "photo-1551107696-a4b0c5a0d9a2",
+      "photo-1587563871167-1ee9c731aefb",
+      "photo-1605733160314-4fc7dac4bb16",
+      "photo-1608231387042-66d1773070a5"
+    ];
+    const sockGallery = [
+      "photo-1586350977771-b3b0abd50c82",
+      "photo-1582966772680-860e372bb558",
+      "photo-1618354691373-d851c5c3a990"
+    ];
+    const brands = [
+      { id: "nike", name: "Nike", image: "photo-1542291026-7eec264c27ff" },
+      { id: "adidas", name: "Adidas", image: "photo-1525966222134-fcfa99b8ae77" },
+      { id: "puma", name: "Puma", image: "photo-1608231387042-66d1773070a5" },
+      { id: "new-balance", name: "New Balance", image: "photo-1551107696-a4b0c5a0d9a2" },
+      { id: "converse", name: "Converse", image: "photo-1587563871167-1ee9c731aefb" },
+      { id: "vans", name: "Vans", image: "photo-1720604083961-88336789791e" }
+    ];
+    const productSeed = [
+      { id: "nk-run", name: "Air Motion Runner", brand: "nike", category: "Running", price: 115, oldPrice: null, rating: 4.8, reviews: 126, popularity: 98, date: "2026-10-02", stock: 18, image: "photo-1542291026-7eec264c27ff", description: "A lightweight everyday running shoe with responsive cushioning, breathable panels, and a flexible sole for easy miles." },
+      { id: "nk-court", name: "Court Classic Low", brand: "nike", category: "Easy wear", price: 90, oldPrice: 105, rating: 4.6, reviews: 84, popularity: 91, date: "2026-09-15", stock: 12, image: "photo-1587563871167-1ee9c731aefb", description: "A clean low-profile court shoe that pairs easily with everyday outfits and feels comfortable from morning to evening." },
+      { id: "nk-boot", name: "Street Utility Boot", brand: "nike", category: "Boots", price: 128, oldPrice: null, rating: 4.5, reviews: 43, popularity: 74, date: "2026-08-30", stock: 7, image: "photo-1605733160314-4fc7dac4bb16", description: "A sturdy street-ready boot with a supportive fit and durable outsole for cooler days and long walks." },
+      { id: "ad-court", name: "Campus Street", brand: "adidas", category: "Lifestyle", price: 100, oldPrice: 120, rating: 4.9, reviews: 143, popularity: 99, date: "2026-10-04", stock: 14, image: "photo-1525966222134-fcfa99b8ae77", description: "A versatile everyday classic with a cushioned footbed and durable construction, ready for school, city walks, and weekends." },
+      { id: "ad-easy", name: "Cloudfoam Easy Wear", brand: "adidas", category: "Easy wear", price: 78, oldPrice: null, rating: 4.7, reviews: 71, popularity: 83, date: "2026-09-21", stock: 21, image: "photo-1552346154-21d32810aba3", description: "Soft cushioning and a fuss-free fit make this lightweight pair an easy choice for daily errands and all-day comfort." },
+      { id: "ad-boot", name: "Terra Trail Boot", brand: "adidas", category: "Boots", price: 124, oldPrice: null, rating: 4.4, reviews: 38, popularity: 66, date: "2026-08-19", stock: 9, image: "photo-1605733160314-4fc7dac4bb16", description: "A supportive, grippy boot designed for comfortable walks on city streets and light trails." },
+      { id: "pu-court", name: "Suede Street", brand: "puma", category: "Lifestyle", price: 82, oldPrice: null, rating: 4.7, reviews: 92, popularity: 90, date: "2026-09-28", stock: 16, image: "photo-1608231387042-66d1773070a5", description: "A laid-back suede-inspired sneaker with a cushioned insole and classic shape that works across seasons." },
+      { id: "pu-run", name: "Velocity Lite Runner", brand: "puma", category: "Running", price: 96, oldPrice: 110, rating: 4.5, reviews: 58, popularity: 79, date: "2026-08-26", stock: 11, image: "photo-1600185365483-26d7a4cc7519", description: "A breathable, lightweight trainer with supportive cushioning for gym sessions and everyday movement." },
+      { id: "pu-flat", name: "Soft Step Flat", brand: "puma", category: "Flat shoes", price: 69, oldPrice: null, rating: 4.3, reviews: 34, popularity: 62, date: "2026-07-17", stock: 6, image: "photo-1551107696-a4b0c5a0d9a2", description: "An easy, low-profile flat with a flexible sole and cushioned lining for casual everyday wear." },
+      { id: "nb-574", name: "574 Everyday", brand: "new-balance", category: "Lifestyle", price: 112, oldPrice: null, rating: 4.9, reviews: 117, popularity: 96, date: "2026-10-01", stock: 13, image: "photo-1551107696-a4b0c5a0d9a2", description: "A comfortable everyday trainer with a supportive feel, dependable cushioning, and a timeless retro-inspired profile." },
+      { id: "nb-run", name: "Fresh Foam Pace", brand: "new-balance", category: "Running", price: 132, oldPrice: 145, rating: 4.6, reviews: 68, popularity: 81, date: "2026-09-11", stock: 8, image: "photo-1549298916-b41d501d3772", description: "Plush underfoot comfort and a breathable upper make this a steady companion for training and long walks." },
+      { id: "nb-flat", name: "Easy Day Flat", brand: "new-balance", category: "Flat shoes", price: 72, oldPrice: null, rating: 4.4, reviews: 29, popularity: 56, date: "2026-07-13", stock: 10, image: "photo-1495555961986-6d4c1ecb7be3", description: "An uncomplicated slip-on flat with soft lining and flexible construction for comfortable everyday plans." },
+      { id: "cv-high", name: "Canvas High Top", brand: "converse", category: "High tops", price: 72, oldPrice: null, rating: 4.8, reviews: 105, popularity: 94, date: "2026-09-24", stock: 20, image: "photo-1587563871167-1ee9c731aefb", description: "A canvas high-top staple with a comfortable ankle fit and versatile styling that never feels out of place." },
+      { id: "cv-flat", name: "Canvas Easy Flat", brand: "converse", category: "Flat shoes", price: 64, oldPrice: 76, rating: 4.5, reviews: 47, popularity: 73, date: "2026-08-05", stock: 15, image: "photo-1525966222134-fcfa99b8ae77", description: "A simple canvas low-top with an easy fit for everyday outfits, walks, and weekend plans." },
+      { id: "cv-boot", name: "Canvas City Boot", brand: "converse", category: "Boots", price: 88, oldPrice: null, rating: 4.2, reviews: 22, popularity: 52, date: "2026-07-07", stock: 5, image: "photo-1605733160314-4fc7dac4bb16", description: "A casual canvas boot silhouette with a supportive sole and comfortable lining." },
+      { id: "vn-skate", name: "Old School Skate", brand: "vans", category: "Skate shoes", price: 74, oldPrice: null, rating: 4.8, reviews: 96, popularity: 89, date: "2026-09-18", stock: 17, image: "photo-1720604083961-88336789791e", description: "A sturdy low-top skate-inspired shoe with a padded collar and grippy outsole for daily wear." },
+      { id: "vn-slip", name: "Classic Slip-On", brand: "vans", category: "Easy wear", price: 62, oldPrice: 72, rating: 4.7, reviews: 89, popularity: 88, date: "2026-09-08", stock: 19, image: "photo-1552346154-21d32810aba3", description: "A no-fuss slip-on with a comfortable fit, durable canvas upper, and familiar easygoing style." },
+      { id: "vn-boot", name: "Canvas Trail Boot", brand: "vans", category: "Boots", price: 92, oldPrice: null, rating: 4.3, reviews: 31, popularity: 57, date: "2026-07-22", stock: 4, image: "photo-1605733160314-4fc7dac4bb16", description: "A casual canvas boot with extra coverage and a durable sole for comfortable everyday adventures." },
+      { id: "sock-crew", name: "Everyday Crew 3-Pack", brand: "diapel", category: "Crew socks", price: 18, oldPrice: null, rating: 4.9, reviews: 78, popularity: 93, date: "2026-09-29", stock: 35, image: "photo-1586350977771-b3b0abd50c82", description: "Three pairs of soft, breathable crew socks with a comfortable stretch fit for everyday rotation." },
+      { id: "sock-ankle", name: "Cushioned Ankle 3-Pack", brand: "diapel", category: "Ankle socks", price: 16, oldPrice: 20, rating: 4.6, reviews: 52, popularity: 76, date: "2026-09-12", stock: 27, image: "photo-1582966772680-860e372bb558", description: "A three-pair ankle sock set with a soft feel, gentle stretch, and cushioning for active days." },
+      { id: "sock-rib", name: "Ribbed Everyday Crew", brand: "diapel", category: "Crew socks", price: 12, oldPrice: null, rating: 4.4, reviews: 33, popularity: 68, date: "2026-10-05", stock: 42, image: "photo-1618354691373-d851c5c3a990", description: "A comfortable rib-knit crew sock made for easy layering and dependable everyday wear." },
+      { id: "sock-sport", name: "Sport Quarter 3-Pack", brand: "diapel", category: "Quarter socks", price: 15, oldPrice: null, rating: 4.5, reviews: 39, popularity: 70, date: "2026-08-31", stock: 31, image: "photo-1586350977771-b3b0abd50c82", description: "Three pairs of sporty quarter socks with a secure feel that works well with trainers." }
+    ];
+    const brandProductPhotos = {
+      nike: ["photo-1542291026-7eec264c27ff", "photo-1587563871167-1ee9c731aefb", "photo-1460353581641-37baddab0fa2", "photo-1605733160314-4fc7dac4bb16"],
+      adidas: ["photo-1525966222134-fcfa99b8ae77", "photo-1552346154-21d32810aba3", "photo-1551107696-a4b0c5a0d9a2", "photo-1608231387042-66d1773070a5"],
+      puma: ["photo-1608231387042-66d1773070a5", "photo-1600185365483-26d7a4cc7519", "photo-1495555961986-6d4c1ecb7be3", "photo-1552346154-21d32810aba3"],
+      "new-balance": ["photo-1551107696-a4b0c5a0d9a2", "photo-1549298916-b41d501d3772", "photo-1495555961986-6d4c1ecb7be3", "photo-1608231387042-66d1773070a5"],
+      converse: ["photo-1587563871167-1ee9c731aefb", "photo-1525966222134-fcfa99b8ae77", "photo-1460353581641-37baddab0fa2", "photo-1605733160314-4fc7dac4bb16"],
+      vans: ["photo-1720604083961-88336789791e", "photo-1552346154-21d32810aba3", "photo-1608231387042-66d1773070a5", "photo-1525966222134-fcfa99b8ae77"]
+    };
+    const brandShoeStyles = [
+      { name: "Everyday Flat", category: "Flat shoes", price: 68, description: "A light, flexible flat made for simple everyday comfort." },
+      { name: "Easy Wear Slip-On", category: "Easy wear", price: 74, description: "A comfortable slip-on with an easy fit for busy days." },
+      { name: "City Walk Boot", category: "Boots", price: 118, description: "A supportive, durable boot for everyday walks and cooler days." }
+    ];
+    brands.forEach((brand, brandIndex) => {
+      const existingCategories = new Set(productSeed.filter((product) => product.brand === brand.id).map((product) => product.category));
+      brandShoeStyles.forEach((style, styleIndex) => {
+        if (existingCategories.has(style.category)) return;
+        productSeed.push({
+          id: `${brand.id}-edit-${styleIndex}`,
+          name: `${brand.name} ${style.name}`,
+          brand: brand.id,
+          category: style.category,
+          price: style.price + brandIndex * 2,
+          oldPrice: null,
+          rating: 4.4 + (brandIndex % 5) / 10,
+          reviews: 24 + brandIndex * 7,
+          popularity: 58 + brandIndex * 4,
+          date: `2026-08-${String(12 + brandIndex + styleIndex).padStart(2, "0")}`,
+          stock: 8 + brandIndex * 2,
+          image: style.category === "Boots" ? "photo-1605733160314-4fc7dac4bb16" : brandProductPhotos[brand.id][styleIndex],
+          description: `${brand.name} ${style.description}`
+        });
+      });
+      productSeed.push(
+        { id: `${brand.id}-crew-socks`, name: `${brand.name} Crew Socks 3-Pack`, brand: brand.id, category: "Crew socks", price: 16 + brandIndex, oldPrice: null, rating: 4.6, reviews: 27 + brandIndex * 4, popularity: 65 + brandIndex * 3, date: "2026-09-05", stock: 24 + brandIndex, image: "photo-1586350977771-b3b0abd50c82", description: `Three pairs of soft ${brand.name} crew socks, made to pair comfortably with your everyday shoes.` },
+        { id: `${brand.id}-ankle-socks`, name: `${brand.name} Sport Ankle Socks 3-Pack`, brand: brand.id, category: "Ankle socks", price: 14 + brandIndex, oldPrice: null, rating: 4.5, reviews: 19 + brandIndex * 3, popularity: 61 + brandIndex * 2, date: "2026-08-28", stock: 20 + brandIndex, image: "photo-1582966772680-860e372bb558", description: `Three pairs of cushioned ${brand.name} ankle socks designed for a comfortable fit with sneakers.` }
+      );
+    });
+    const products = productSeed.map((product, index) => ({
+      ...product,
+      brandName: brands.find((brand) => brand.id === product.brand)?.name || "Diapel",
+      images: [product.image, ...(product.category.toLowerCase().includes("sock") ? sockGallery : shoeGallery).filter((src) => src !== product.image).slice(0, 2)],
+      reviewsList: [
+        { name: ["Jordan", "Taylor", "Morgan"][index % 3], rating: 5, text: ["Comfortable straight out of the box.", "Great everyday pair and true to size.", "Good quality and just what I needed."][index % 3] },
+        { name: ["Casey", "Riley", "Avery"][(index + 1) % 3], rating: 4, text: ["Comfortable for a full day on my feet.", "Nice fit and looks just like the pictures.", "Easy to wear and good value."][(index + 1) % 3] }
+      ]
+    }));
+
+    const state = { category: "All", brand: "all", min: 0, max: Infinity, search: "", sort: "popular", cart: loadCart(), orders: loadOrders(), orderEmail: "", modalProduct: null };
+    const pageIds = ["home", "shop", "sale", "orders", "about", "faq", "returns", "shipping"];
+    const brandName = (id) => brands.find((brand) => brand.id === id)?.name || "Diapel";
+    const money = (value) => `$${value.toFixed(2)}`;
+    const stars = (rating) => "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
+
+    function loadCart() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("diapel-cart") || "[]");
+        if (!Array.isArray(saved)) return [];
+        return saved.filter((line) => productsSafeHas(line.id) && Number.isInteger(line.quantity) && line.quantity > 0);
+      } catch (error) {
+        console.warn("Could not load the saved shopping bag.", error);
+        return [];
+      }
+    }
+    function loadOrders() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("diapel-orders") || "[]");
+        if (!Array.isArray(saved)) return [];
+        return saved.filter((order) =>
+          order && typeof order.id === "string" &&
+          typeof order.email === "string" &&
+          typeof order.createdAt === "string" &&
+          Array.isArray(order.items) &&
+          order.items.length > 0 &&
+          order.items.every((item) => productsSafeHas(item.id) && Number.isInteger(item.quantity) && item.quantity > 0)
+        );
+      } catch (error) {
+        console.error("Could not load demo order history.", error);
+        return [];
+      }
+    }
+    function productsSafeHas(id) { return productSeed.some((product) => product.id === id); }
+    function saveCart() {
+      localStorage.setItem("diapel-cart", JSON.stringify(state.cart));
+      renderCartCount();
+    }
+    function saveOrders() {
+      try {
+        localStorage.setItem("diapel-orders", JSON.stringify(state.orders));
+        return true;
+      } catch (error) {
+        console.error("Could not save demo order history.", error);
+        return false;
+      }
+    }
+    function renderCartCount() {
+      document.getElementById("cartCount").textContent = String(state.cart.reduce((sum, item) => sum + item.quantity, 0));
+    }
+
+    function showPage(name) {
+      if (!pageIds.includes(name)) return;
+      document.querySelectorAll(".page").forEach((page) => page.classList.toggle("active", page.id === `${name}Page`));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (name === "shop") renderProducts();
+      if (name === "sale") renderSale();
+      if (name === "orders" && state.orderEmail) renderOrders(state.orderEmail);
+    }
+    function brandCard(brand) {
+      const link = document.createElement("a");
+      link.href = "#";
+      link.className = "brand-card";
+      link.style.backgroundImage = `url("${image(brand.image, 700)}")`;
+      link.innerHTML = `<span>${brand.name} &nbsp;↗</span>`;
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        state.brand = brand.id;
+        state.category = "All";
+        showPage("shop");
+        renderCategories();
+        renderProducts();
+      });
+      return link;
+    }
+    brands.forEach((brand) => document.getElementById("homeBrands").appendChild(brandCard(brand)));
+
+    function initializeFilters() {
+      const categories = ["All", ...new Set(products.map((product) => product.category))];
+      categories.forEach((category) => {
+        const button = document.createElement("button");
+        button.className = "category-button";
+        button.type = "button";
+        button.textContent = category;
+        button.dataset.category = category;
+        button.addEventListener("click", () => {
+          state.category = category;
+          renderCategories();
+          renderProducts();
+        });
+        document.getElementById("categoryList").appendChild(button);
+      });
+      const brandFilter = document.getElementById("brandFilter");
+      [["all", "All brands"], ...brands.map((brand) => [brand.id, brand.name]), ["diapel", "Diapel"]].forEach(([id, name]) => {
+        const option = document.createElement("option");
+        option.value = id;
+        option.textContent = name;
+        brandFilter.appendChild(option);
+      });
+      brandFilter.addEventListener("change", () => { state.brand = brandFilter.value; renderProducts(); });
+      renderCategories();
+    }
+    function renderCategories() {
+      document.querySelectorAll(".category-button").forEach((button) => button.classList.toggle("active", button.dataset.category === state.category));
+    }
+    function filteredProducts({ sale = false } = {}) {
+      let list = products.filter((product) =>
+        (!sale || product.oldPrice !== null) &&
+        (state.category === "All" || product.category === state.category) &&
+        (state.brand === "all" || product.brand === state.brand) &&
+        product.price >= state.min && product.price <= state.max &&
+        (!state.search || `${product.name} ${product.category} ${product.brandName}`.toLowerCase().includes(state.search.toLowerCase()))
+      );
+      const sort = sale ? document.getElementById("saleSort").value : document.getElementById("sortSelect").value;
+      if (sort === "low-high") list = list.sort((a, b) => a.price - b.price);
+      if (sort === "high-low") list = list.sort((a, b) => b.price - a.price);
+      if (sort === "newest") list = list.sort((a, b) => b.date.localeCompare(a.date));
+      if (sort === "popular") list = list.sort((a, b) => b.popularity - a.popularity);
+      return list;
+    }
+    function productCard(product) {
+      const card = document.createElement("article");
+      card.className = "product-card";
+      const tag = product.oldPrice !== null ? `<span class="product-tag sale">Sale</span>` : product.date >= "2026-09-20" ? `<span class="product-tag">New</span>` : "";
+      card.innerHTML = `<button class="product-image" type="button" aria-label="View ${product.name} details"><img src="${image(product.image)}" alt="${product.name}" loading="lazy">${tag}</button><div class="product-meta"><button type="button">${product.name}</button><span class="listing-price">${money(product.price)}${product.oldPrice ? `<del>${money(product.oldPrice)}</del>` : ""}</span></div><div class="product-submeta"><span>${product.brandName} · ${product.category}</span><span class="stars" aria-label="${product.rating} out of 5 stars">${stars(product.rating)} <span style="color:var(--muted)">(${product.reviews})</span></span></div>`;
+      card.querySelectorAll(".product-image, .product-meta button").forEach((button) => button.addEventListener("click", () => openProduct(product.id)));
+      return card;
+    }
+    function renderProducts() {
+      const list = filteredProducts();
+      document.getElementById("resultCount").textContent = `${list.length} ${list.length === 1 ? "product" : "products"}`;
+      const grid = document.getElementById("productGrid");
+      grid.replaceChildren();
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state">No products match your search or filters. Try changing your category or price range.</div>';
+        return;
+      }
+      list.forEach((product) => grid.appendChild(productCard(product)));
+    }
+    function renderSale() {
+      const list = filteredProducts({ sale: true });
+      document.getElementById("saleCount").textContent = `${list.length} sale ${list.length === 1 ? "style" : "styles"}`;
+      const grid = document.getElementById("saleGrid");
+      grid.replaceChildren();
+      if (!list.length) { grid.innerHTML = '<div class="empty-state">No sale styles available at the moment.</div>'; return; }
+      list.forEach((product) => grid.appendChild(productCard(product)));
+    }
+
+    function openProduct(id) {
+      const product = products.find((item) => item.id === id);
+      if (!product) return;
+      state.modalProduct = product;
+      const root = document.getElementById("modalRoot");
+      root.innerHTML = `<div class="modal-wrap" data-close-modal><section class="modal" role="dialog" aria-modal="true" aria-label="${product.name} details"><button class="close-button modal-close" data-close-modal aria-label="Close product details">×</button><div class="product-detail"><div><img id="galleryMain" class="gallery-main" src="${image(product.images[0], 1000)}" alt="${product.name}"><div class="gallery-thumbs">${product.images.map((src, index) => `<button type="button" class="${index === 0 ? "active" : ""}" data-image-index="${index}" aria-label="View product image ${index + 1}"><img src="${image(src, 180)}" alt=""></button>`).join("")}</div></div><div class="detail-copy"><span class="eyebrow">${product.brandName} · ${product.category}</span><h2>${product.name}</h2><div class="rating-line"><span class="stars">${stars(product.rating)}</span> ${product.rating.toFixed(1)} (${product.reviews} reviews)</div><div class="detail-price">${money(product.price)} ${product.oldPrice ? `<del>${money(product.oldPrice)}</del>` : ""}</div><p>${product.description}</p><p class="stock">${product.stock > 0 ? `${product.stock} in stock` : "Currently out of stock"}</p><div class="detail-actions"><input id="productQuantity" type="number" min="1" max="${product.stock}" value="1" aria-label="Quantity" ${product.stock < 1 ? "disabled" : ""}><button class="button" id="addToCart" type="button" ${product.stock < 1 ? "disabled" : ""}>Add to bag</button></div><div class="notice">This is a storefront demo. Product availability and prices are sample data.</div><h3>Customer reviews</h3>${product.reviewsList.map((review) => `<div class="review"><strong>${review.name}</strong><span class="stars">${stars(review.rating)}</span><p>${review.text}</p></div>`).join("")}</div></div></section></div>`;
+      root.querySelector(".modal-wrap").addEventListener("click", (event) => { if (event.target.matches("[data-close-modal]")) closeModal(); });
+      root.querySelectorAll("[data-image-index]").forEach((button) => button.addEventListener("click", () => {
+        root.querySelector("#galleryMain").src = image(product.images[Number(button.dataset.imageIndex)], 1000);
+        root.querySelectorAll("[data-image-index]").forEach((thumb) => thumb.classList.toggle("active", thumb === button));
+      }));
+      root.querySelector("#addToCart")?.addEventListener("click", () => {
+        const quantity = Number(root.querySelector("#productQuantity").value);
+        if (!addToCart(product, quantity)) return;
+        closeModal();
+        openCart();
+      });
+      document.body.classList.add("locked");
+    }
+    function closeModal() {
+      document.getElementById("modalRoot").replaceChildren();
+      if (!document.getElementById("cartOverlay").classList.contains("hidden")) return;
+      document.body.classList.remove("locked");
+    }
+    function addToCart(product, quantity) {
+      if (!Number.isInteger(quantity) || quantity < 1 || quantity > product.stock) { notify(`Choose a quantity between 1 and ${product.stock}.`); return false; }
+      const line = state.cart.find((item) => item.id === product.id);
+      if (line && line.quantity + quantity > product.stock) { notify(`Only ${product.stock} of this item are available.`); return false; }
+      if (line) line.quantity += quantity;
+      else state.cart.push({ id: product.id, quantity });
+      saveCart();
+      notify(`${product.name} added to your bag.`);
+      return true;
+    }
+    function openCart() {
+      renderCart();
+      document.getElementById("cartOverlay").classList.remove("hidden");
+      document.body.classList.add("locked");
+    }
+    function closeCart() {
+      document.getElementById("cartOverlay").classList.add("hidden");
+      if (!document.getElementById("modalRoot").childElementCount) document.body.classList.remove("locked");
+    }
+    function renderCart() {
+      const holder = document.getElementById("cartItems");
+      const summary = document.getElementById("cartSummary");
+      holder.replaceChildren();
+      if (!state.cart.length) {
+        holder.innerHTML = '<p class="empty-state">Your bag is waiting for something comfortable.</p>';
+        summary.replaceChildren();
+        return;
+      }
+      state.cart.forEach((line) => {
+        const product = products.find((item) => item.id === line.id);
+        if (!product) return;
+        const row = document.createElement("article");
+        row.className = "cart-line";
+        row.innerHTML = `<img src="${image(product.image, 240)}" alt="${product.name}"><div><h3>${product.name}</h3><p>${product.brandName} · ${money(product.price)}</p><div class="quantity-control"><button type="button" data-adjust="-1" aria-label="Decrease quantity">−</button><span>${line.quantity}</span><button type="button" data-adjust="1" aria-label="Increase quantity">+</button></div><br><button class="remove-button" type="button">Remove</button></div><strong>${money(product.price * line.quantity)}</strong>`;
+        row.querySelectorAll("[data-adjust]").forEach((button) => button.addEventListener("click", () => adjustCart(line.id, Number(button.dataset.adjust))));
+        row.querySelector(".remove-button").addEventListener("click", () => { state.cart = state.cart.filter((item) => item.id !== line.id); saveCart(); renderCart(); });
+        holder.appendChild(row);
+      });
+      const subtotal = state.cart.reduce((sum, line) => sum + products.find((item) => item.id === line.id).price * line.quantity, 0);
+      summary.innerHTML = `<div class="summary-row"><span>Subtotal</span><strong>${money(subtotal)}</strong></div><div class="summary-row"><span>Shipping</span><span>Rates shown at checkout</span></div><p style="color:var(--muted);font-size:.78rem">Choose a destination to see sample delivery rates and estimates.</p><button class="button" id="checkoutButton" type="button">Continue to delivery</button>`;
+      summary.querySelector("#checkoutButton").addEventListener("click", () => { closeCart(); openCheckout(); });
+    }
+    function createDemoOrder(email, discountAmount, shipping, paymentMethod) {
+      const now = new Date();
+      const order = {
+        id: `DPL-${now.getTime().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
+        email: email.trim().toLowerCase(),
+        createdAt: now.toISOString(),
+        status: "Demo preview · not paid",
+        items: state.cart.map((line) => ({ id: line.id, quantity: line.quantity })),
+        subtotal: state.cart.reduce((sum, line) => sum + products.find((product) => product.id === line.id).price * line.quantity, 0),
+        discount: discountAmount,
+        shipping: shipping.fee,
+        shippingMethod: shipping.label,
+        paymentMethod
+      };
+      state.orders.unshift(order);
+      const saved = saveOrders();
+      return { order, saved };
+    }
+    function renderOrders(email) {
+      const normalizedEmail = email.trim().toLowerCase();
+      const list = document.getElementById("ordersList");
+      list.replaceChildren();
+      const matches = state.orders.filter((order) => order.email === normalizedEmail);
+      if (!matches.length) {
+        const empty = document.createElement("div");
+        empty.className = "order-empty";
+        empty.textContent = "No saved demo purchases were found for that email in this browser. Check the checkout email or complete a demo checkout first.";
+        list.appendChild(empty);
+        return;
+      }
+      matches.forEach((order) => {
+        const card = document.createElement("article");
+        card.className = "order-card";
+        const header = document.createElement("div");
+        header.className = "order-header";
+        const details = document.createElement("div");
+        const id = document.createElement("strong");
+        id.textContent = order.id;
+        const date = document.createElement("p");
+        date.textContent = new Date(order.createdAt).toLocaleString();
+        details.append(id, date);
+        const status = document.createElement("span");
+        status.className = "order-demo-status";
+        status.textContent = order.status;
+        header.append(details, status);
+        card.appendChild(header);
+
+        order.items.forEach((line) => {
+          const product = products.find((item) => item.id === line.id);
+          if (!product) return;
+          const row = document.createElement("div");
+          row.className = "order-product";
+          const photo = document.createElement("img");
+          photo.src = image(product.image, 240);
+          photo.alt = product.name;
+          const info = document.createElement("div");
+          const name = document.createElement("h3");
+          name.textContent = product.name;
+          const meta = document.createElement("p");
+          meta.textContent = `${product.brandName} · Qty ${line.quantity} · ${money(product.price)} each`;
+          const view = document.createElement("button");
+          view.type = "button";
+          view.textContent = "View product";
+          view.addEventListener("click", () => openProduct(product.id));
+          info.append(name, meta, view);
+          const total = document.createElement("strong");
+          total.textContent = money(product.price * line.quantity);
+          row.append(photo, info, total);
+          card.appendChild(row);
+        });
+
+        const totals = document.createElement("div");
+        totals.className = "order-totals";
+        const subtotal = document.createElement("p");
+        subtotal.textContent = `Subtotal: ${money(order.subtotal)}`;
+        const discount = document.createElement("strong");
+        discount.textContent = `Demo discount: −${money(order.discount)}`;
+        const shipping = document.createElement("p");
+        shipping.textContent = `Shipping (${order.shippingMethod || "not recorded"}): ${money(Number(order.shipping) || 0)}`;
+        const payment = document.createElement("p");
+        payment.textContent = `Payment choice: ${order.paymentMethod || "not recorded"} · demo only`;
+        const total = document.createElement("strong");
+        total.textContent = `Demo total: ${money(order.subtotal - order.discount + (Number(order.shipping) || 0))}`;
+        totals.append(subtotal, discount, shipping, payment, total);
+        card.appendChild(totals);
+        list.appendChild(card);
+      });
+    }
+    function adjustCart(id, adjustment) {
+      const line = state.cart.find((item) => item.id === id);
+      const product = products.find((item) => item.id === id);
+      if (!line || !product) return;
+      const next = line.quantity + adjustment;
+      if (next <= 0) state.cart = state.cart.filter((item) => item.id !== id);
+      else if (next <= product.stock) line.quantity = next;
+      else notify(`Only ${product.stock} of this item are available.`);
+      saveCart();
+      renderCart();
+    }
+    function openCheckout() {
+      if (!state.cart.length) { notify("Your bag is empty."); return; }
+      const subtotal = state.cart.reduce((sum, line) => sum + products.find((item) => item.id === line.id).price * line.quantity, 0);
+      const root = document.getElementById("modalRoot");
+      root.innerHTML = `<div class="modal-wrap" data-close-modal><section class="modal narrow" role="dialog" aria-modal="true" aria-label="Delivery details"><button class="close-button modal-close" data-close-modal aria-label="Close delivery form">×</button><span class="eyebrow">Almost there</span><h2 style="font:700 2rem 'Playfair Display',serif;margin:8px 0">Delivery details</h2><p style="color:var(--muted);line-height:1.6">Enter where your Diapel demo order should go. No order or payment will be processed.</p><div class="notice"><strong>Demo checkout only.</strong> Card, PayPal, and cash on delivery are display choices only. This page does not collect payment details, charge you, or send your information to a server.</div><form id="deliveryForm"><div class="form-grid"><label class="form-field">Full name<input name="fullName" autocomplete="name" required></label><label class="form-field">Email<input name="email" type="email" autocomplete="email" required></label><label class="form-field full">Street address<input name="address" autocomplete="street-address" required></label><label class="form-field">City<input name="city" autocomplete="address-level2" required></label><label class="form-field">State / region<input name="region" autocomplete="address-level1" required></label><label class="form-field">ZIP / postal code<input name="postal" autocomplete="postal-code" required></label><label class="form-field">Country<select name="country" autocomplete="country-name" required><option value="">Choose a country</option><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Ghana</option><option>Nigeria</option></select></label><label class="form-field">Shipping method<select name="shippingMethod" id="shippingMethod" required disabled><option value="">Choose country first</option></select></label><label class="form-field">Payment method<select name="paymentMethod" id="paymentMethod" required><option value="">Choose a payment method</option><option value="Card (demo)">Card (demo only)</option><option value="PayPal (demo)">PayPal (demo only)</option><option value="Cash on delivery (demo)">Cash on delivery (demo only)</option></select></label><label class="form-field full">Delivery notes (optional)<textarea name="notes" placeholder="Apartment, gate, or delivery instructions"></textarea></label><label class="form-field full">Discount code<input name="discount" id="discountCode" placeholder="Try STEP15"></label></div><div class="summary-row"><span>Items subtotal</span><strong>${money(subtotal)}</strong></div><div class="summary-row"><span>Demo discount</span><strong id="checkoutDiscount">$0.00</strong></div><div class="summary-row"><span>Shipping</span><strong id="checkoutShipping">Choose a destination</strong></div><div class="summary-row"><span>Estimated delivery</span><span id="deliveryEstimate">Choose a destination</span></div><div class="summary-row"><span>Demo total</span><strong id="checkoutTotal">${money(subtotal)}</strong></div><p id="paymentDemoNote" class="notice">Choose a payment method. None of the listed methods processes a real payment in this demo.</p><div class="form-actions"><button class="button" type="submit">Save demo order preview · <span id="checkoutTotalButton">${money(subtotal)}</span></button></div></form></section></div>`;
+      root.querySelector(".modal-wrap").addEventListener("click", (event) => { if (event.target.matches("[data-close-modal]")) closeModal(); });
+      const discount = root.querySelector("#discountCode");
+      const form = root.querySelector("#deliveryForm");
+      const country = form.elements.namedItem("country");
+      const shippingMethod = root.querySelector("#shippingMethod");
+      const paymentMethod = root.querySelector("#paymentMethod");
+      const shippingRates = {
+        "United States": [
+          { value: "us-standard", label: "Standard · 3–5 business days", fee: subtotal >= 100 ? 0 : 8, display: subtotal >= 100 ? "Standard · free · 3–5 business days" : "Standard · $8.00 · 3–5 business days" },
+          { value: "us-express", label: "Express · 1–2 business days", fee: 15, display: "Express · $15.00 · 1–2 business days" }
+        ],
+        Canada: [{ value: "ca-standard", label: "Standard · 5–10 business days", fee: 18, display: "Standard · $18.00 · 5–10 business days" }],
+        "United Kingdom": [{ value: "uk-standard", label: "Standard · 5–10 business days", fee: 18, display: "Standard · $18.00 · 5–10 business days" }],
+        Ghana: [{ value: "gh-standard", label: "Standard · 5–10 business days", fee: 12, display: "Standard · $12.00 · 5–10 business days" }],
+        Nigeria: [{ value: "ng-standard", label: "Standard · 5–10 business days", fee: 12, display: "Standard · $12.00 · 5–10 business days" }]
+      };
+      const getSelectedShipping = () => (shippingRates[country.value] || []).find((rate) => rate.value === shippingMethod.value) || null;
+      const updateTotal = () => {
+        const valid = discount.value.trim().toUpperCase() === "STEP15" && subtotal >= 75;
+        const amount = valid ? subtotal * .15 : 0;
+        root.querySelector("#checkoutDiscount").textContent = `−${money(amount)}`;
+        const shipping = getSelectedShipping();
+        root.querySelector("#checkoutShipping").textContent = shipping ? money(shipping.fee) : "Choose a delivery option";
+        const total = subtotal - amount + (shipping ? shipping.fee : 0);
+        root.querySelector("#checkoutTotal").textContent = money(total);
+        root.querySelector("#checkoutTotalButton").textContent = money(total);
+      };
+      const updateShippingOptions = () => {
+        const rates = shippingRates[country.value] || [];
+        shippingMethod.replaceChildren(new Option(rates.length ? "Choose a delivery option" : "Choose a supported country", ""));
+        rates.forEach((rate) => shippingMethod.add(new Option(rate.display, rate.value)));
+        shippingMethod.disabled = rates.length === 0;
+        root.querySelector("#deliveryEstimate").textContent = rates.length ? "Choose a delivery option" : "Choose a supported country";
+        updateTotal();
+      };
+      country.addEventListener("change", updateShippingOptions);
+      shippingMethod.addEventListener("change", () => {
+        const shipping = getSelectedShipping();
+        root.querySelector("#deliveryEstimate").textContent = shipping ? shipping.label.split(" · ").slice(1).join(" · ") : "Choose a delivery option";
+        updateTotal();
+      });
+      discount.addEventListener("input", updateTotal);
+      paymentMethod.addEventListener("change", () => {
+        const notes = {
+          "Card (demo)": "Card selected for this demo only. No card details are requested or charged.",
+          "PayPal (demo)": "PayPal selected for this demo only. You will not be redirected and no payment is processed.",
+          "Cash on delivery (demo)": "Cash on delivery selected for this demo only. No real delivery or collection is arranged."
+        };
+        root.querySelector("#paymentDemoNote").textContent = notes[paymentMethod.value] || "Choose a payment method. None of the listed methods processes a real payment in this demo.";
+      });
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const shipping = getSelectedShipping();
+        if (!shipping) { notify("Choose a supported destination and delivery method."); return; }
+        const email = form.elements.namedItem("email").value;
+        const discountAmount = discount.value.trim().toUpperCase() === "STEP15" && subtotal >= 75 ? subtotal * .15 : 0;
+        const { order, saved } = createDemoOrder(email, discountAmount, shipping, paymentMethod.value);
+        state.orderEmail = order.email;
+        state.cart = [];
+        saveCart();
+        root.innerHTML = `<div class="modal-wrap"><section class="modal narrow" role="dialog" aria-modal="true"><span class="eyebrow">Demo complete</span><h2 style="font:700 2rem 'Playfair Display',serif">Your order preview is ready.</h2><p><strong>Order ${order.id}</strong></p><p style="color:var(--muted);line-height:1.7">This is a saved demo purchase preview only; no payment was taken and nothing will be delivered. Payment choice: ${order.paymentMethod}. Shipping: ${money(order.shipping)}. Find these products under My orders using ${order.email}.</p>${saved ? "" : '<div class="notice">The order is available for this page session, but browser storage could not save it for your next visit.</div>'}<button class="button" id="findPurchase" type="button">Find my purchase</button><button class="button outline" id="finishDemo" type="button" style="margin:10px 0 0 8px">Continue shopping</button></section></div>`;
+        root.querySelector("#findPurchase").addEventListener("click", () => {
+          closeModal();
+          document.getElementById("orderEmail").value = state.orderEmail;
+          showPage("orders");
+          renderOrders(state.orderEmail);
+        });
+        root.querySelector("#finishDemo").addEventListener("click", () => { closeModal(); showPage("shop"); });
+      });
+      document.body.classList.add("locked");
+    }
+    let toastTimer;
+    function notify(message) {
+      const root = document.getElementById("toastRoot");
+      root.innerHTML = `<div class="toast" role="status">${message}</div>`;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => root.replaceChildren(), 3000);
+    }
+
+    document.addEventListener("click", (event) => {
+      const pageButton = event.target.closest("[data-page]");
+      if (pageButton) {
+        event.preventDefault();
+        state.category = pageButton.dataset.category || "All";
+        state.brand = pageButton.dataset.brand || "all";
+        document.getElementById("brandFilter").value = state.brand;
+        state.search = "";
+        document.getElementById("searchInput").value = "";
+        showPage(pageButton.dataset.page);
+        renderCategories();
+        return;
+      }
+      if (event.target.closest("#cartButton")) openCart();
+      if (event.target.closest("[data-close-cart]")) closeCart();
+    });
+    document.getElementById("accountButton").addEventListener("click", openAccount);
+    document.getElementById("searchForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      state.search = document.getElementById("searchInput").value.trim();
+      state.category = "All";
+      state.brand = "all";
+      document.getElementById("brandFilter").value = "all";
+      showPage("shop");
+      renderCategories();
+      renderProducts();
+    });
+    document.getElementById("sortSelect").addEventListener("change", renderProducts);
+    document.getElementById("saleSort").addEventListener("change", renderSale);
+    document.getElementById("orderSearchForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      state.orderEmail = document.getElementById("orderEmail").value.trim().toLowerCase();
+      renderOrders(state.orderEmail);
+    });
+    document.getElementById("applyPrice").addEventListener("click", () => {
+      const min = document.getElementById("minPrice").value;
+      const max = document.getElementById("maxPrice").value;
+      if (min && max && Number(min) > Number(max)) { document.getElementById("maxPrice").setCustomValidity("Maximum price must be greater than minimum price."); document.getElementById("maxPrice").reportValidity(); document.getElementById("maxPrice").setCustomValidity(""); return; }
+      state.min = min ? Number(min) : 0;
+      state.max = max ? Number(max) : Infinity;
+      renderProducts();
+    });
+    document.getElementById("clearFilters").addEventListener("click", () => {
+      state.category = "All"; state.brand = "all"; state.min = 0; state.max = Infinity; state.search = "";
+      document.getElementById("brandFilter").value = "all";
+      document.getElementById("minPrice").value = "";
+      document.getElementById("maxPrice").value = "";
+      document.getElementById("searchInput").value = "";
+      renderCategories(); renderProducts();
+    });
+
+    function openAccount() {
+      const root = document.getElementById("modalRoot");
+      root.innerHTML = `<div class="modal-wrap" data-close-modal><section class="modal narrow" role="dialog" aria-modal="true" aria-label="Sign in or sign up"><button class="close-button modal-close" data-close-modal aria-label="Close account dialog">×</button><span class="eyebrow">Welcome to Diapel</span><h2 id="accountTitle" style="font:700 2rem 'Playfair Display',serif">Sign in</h2><p style="color:var(--muted)">Create an account or sign in to personalize this demo storefront.</p><form id="accountForm"><div class="form-grid"><label class="form-field full hidden" id="accountNameField">Full name<input name="name" autocomplete="name"></label><label class="form-field full">Email address<input name="email" type="email" autocomplete="email" required></label><label class="form-field full">Password<input name="password" type="password" minlength="6" autocomplete="current-password" required></label></div><div class="form-actions"><button class="button" type="submit" id="accountSubmit">Sign in</button></div></form><p style="text-align:center"> <span id="accountPrompt">New here?</span> <button class="icon-button" id="accountToggle" type="button"><u>Create an account</u></button></p><button class="button outline" id="accountOrders" type="button" style="width:100%">Find my orders</button><div class="notice">Demo only: credentials are not sent to a server and do not create a real account.</div></section></div>`;
+      const modal = root.querySelector(".modal-wrap");
+      modal.addEventListener("click", (event) => { if (event.target.matches("[data-close-modal]")) closeModal(); });
+      let signup = false;
+      const toggle = root.querySelector("#accountToggle");
+      toggle.addEventListener("click", () => {
+        signup = !signup;
+        root.querySelector("#accountTitle").textContent = signup ? "Create your account" : "Sign in";
+        root.querySelector("#accountSubmit").textContent = signup ? "Create account" : "Sign in";
+        root.querySelector("#accountPrompt").textContent = signup ? "Already have an account?" : "New here?";
+        toggle.innerHTML = `<u>${signup ? "Sign in" : "Create an account"}</u>`;
+        root.querySelector("#accountNameField").classList.toggle("hidden", !signup);
+        root.querySelector("#accountNameField input").required = signup;
+      });
+      root.querySelector("#accountForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const email = root.querySelector('[name="email"]').value.trim().toLowerCase();
+        closeModal();
+        document.getElementById("accountButton").textContent = signup ? "My account" : "Signed in";
+        state.orderEmail = email;
+        document.getElementById("orderEmail").value = email;
+        notify(signup ? "Demo account created for this session." : "Signed in for this demo session.");
+      });
+      root.querySelector("#accountOrders").addEventListener("click", () => {
+        closeModal();
+        showPage("orders");
+        if (state.orderEmail) {
+          document.getElementById("orderEmail").value = state.orderEmail;
+          renderOrders(state.orderEmail);
+        }
+      });
+      document.body.classList.add("locked");
+    }
+    initializeFilters();
+    renderProducts();
+    renderCartCount();
+  </script>
+</body>
+</html>
+,
